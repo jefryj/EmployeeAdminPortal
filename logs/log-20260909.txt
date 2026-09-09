@@ -1,0 +1,161 @@
+2026-09-09 15:45:27.997 +05:30 [WRN] No store type was specified for the decimal property 'Salary' on entity type 'Employee'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-09-09 15:45:29.265 +05:30 [INF] Executed DbCommand (28ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Employees] AS [e]
+        WHERE [e].[Role] = N'Admin') THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-09-09 15:45:29.299 +05:30 [INF] User profile is available. Using 'C:\Users\jejoseph\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-09-09 15:45:29.363 +05:30 [INF] Now listening on: http://localhost:5202
+2026-09-09 15:45:29.365 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-09 15:45:29.366 +05:30 [INF] Hosting environment: Development
+2026-09-09 15:45:29.367 +05:30 [INF] Content root path: C:\dev\Training-Journal\Week-4\EmployeeAdminPortal\EmployeeAdminPortal
+2026-09-09 15:45:29.569 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/index.html - null null
+2026-09-09 15:45:29.641 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/index.html - 200 null text/html;charset=utf-8 73.288ms
+2026-09-09 15:45:29.681 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/index.css - null null
+2026-09-09 15:45:29.681 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui.css - null null
+2026-09-09 15:45:29.681 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-bundle.js - null null
+2026-09-09 15:45:29.682 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-standalone-preset.js - null null
+2026-09-09 15:45:29.682 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/index.js - null null
+2026-09-09 15:45:29.691 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui.css - 304 null null 10.3874ms
+2026-09-09 15:45:29.691 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/index.css - 304 null null 10.3383ms
+2026-09-09 15:45:29.691 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-standalone-preset.js - 304 null null 8.9381ms
+2026-09-09 15:45:29.691 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/index.js - 304 null null 8.7211ms
+2026-09-09 15:45:29.695 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-bundle.js - 304 null null 13.2659ms
+2026-09-09 15:45:29.831 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/v1/swagger.json - null null
+2026-09-09 15:45:29.842 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/favicon-32x32.png - null null
+2026-09-09 15:45:29.846 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/favicon-32x32.png - 304 null null 3.2963ms
+2026-09-09 15:45:29.921 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 89.8355ms
+2026-09-09 15:45:58.000 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/api/Departments - null null
+2026-09-09 15:45:58.006 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-09-09 15:45:58.029 +05:30 [INF] Executing endpoint 'EmployeeAdminPortal.Controllers.DepartmentsController.GetAllDepartments (EmployeeAdminPortal)'
+2026-09-09 15:45:58.041 +05:30 [INF] Route matched with {action = "GetAllDepartments", controller = "Departments"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllDepartments() on controller EmployeeAdminPortal.Controllers.DepartmentsController (EmployeeAdminPortal).
+2026-09-09 15:45:58.121 +05:30 [INF] Executed DbCommand (3ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [d].[Id], [d].[DepartmentName]
+FROM [Departments] AS [d]
+2026-09-09 15:45:58.163 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[EmployeeAdminPortal.Models.Entities.Department, EmployeeAdminPortal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-09-09 15:45:58.181 +05:30 [INF] Executed action EmployeeAdminPortal.Controllers.DepartmentsController.GetAllDepartments (EmployeeAdminPortal) in 135.4325ms
+2026-09-09 15:45:58.182 +05:30 [INF] Executed endpoint 'EmployeeAdminPortal.Controllers.DepartmentsController.GetAllDepartments (EmployeeAdminPortal)'
+2026-09-09 15:45:58.187 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/api/Departments - 200 null application/json; charset=utf-8 186.7055ms
+2026-09-09 15:46:24.961 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/api/Employees - null null
+2026-09-09 15:46:24.972 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-09 15:46:24.976 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-09 15:46:24.977 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/api/Employees - 401 0 null 15.9369ms
+2026-09-09 15:46:33.778 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/api/Employees - null null
+2026-09-09 15:46:33.783 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-09 15:46:33.784 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-09 15:46:33.785 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/api/Employees - 401 0 null 7.3395ms
+2026-09-09 15:47:41.425 +05:30 [INF] Application is shutting down...
+2026-09-09 15:47:47.305 +05:30 [WRN] No store type was specified for the decimal property 'Salary' on entity type 'Employee'. This will cause values to be silently truncated if they do not fit in the default precision and scale. Explicitly specify the SQL server column type that can accommodate all the values in 'OnModelCreating' using 'HasColumnType', specify precision and scale using 'HasPrecision', or configure a value converter using 'HasConversion'.
+2026-09-09 15:47:47.720 +05:30 [INF] Executed DbCommand (29ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT CASE
+    WHEN EXISTS (
+        SELECT 1
+        FROM [Employees] AS [e]
+        WHERE [e].[Role] = N'Admin') THEN CAST(1 AS bit)
+    ELSE CAST(0 AS bit)
+END
+2026-09-09 15:47:47.758 +05:30 [INF] User profile is available. Using 'C:\Users\jejoseph\AppData\Local\ASP.NET\DataProtection-Keys' as key repository and Windows DPAPI to encrypt keys at rest.
+2026-09-09 15:47:47.795 +05:30 [INF] Now listening on: http://localhost:5202
+2026-09-09 15:47:47.797 +05:30 [INF] Application started. Press Ctrl+C to shut down.
+2026-09-09 15:47:47.798 +05:30 [INF] Hosting environment: Development
+2026-09-09 15:47:47.799 +05:30 [INF] Content root path: C:\dev\Training-Journal\Week-4\EmployeeAdminPortal\EmployeeAdminPortal
+2026-09-09 15:47:51.502 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/index.html - null null
+2026-09-09 15:47:51.581 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/index.html - 304 null null 80.1408ms
+2026-09-09 15:47:51.611 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/index.css - null null
+2026-09-09 15:47:51.611 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/index.js - null null
+2026-09-09 15:47:51.611 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-standalone-preset.js - null null
+2026-09-09 15:47:51.611 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-bundle.js - null null
+2026-09-09 15:47:51.611 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui.css - null null
+2026-09-09 15:47:51.616 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/index.js - 304 null null 5.9433ms
+2026-09-09 15:47:51.623 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/index.css - 304 null null 12.9626ms
+2026-09-09 15:47:51.623 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui.css - 304 null null 12.9637ms
+2026-09-09 15:47:51.623 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-standalone-preset.js - 304 null null 12.747ms
+2026-09-09 15:47:51.627 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/swagger-ui-bundle.js - 304 null null 16.5826ms
+2026-09-09 15:47:51.665 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/v1/swagger.json - null null
+2026-09-09 15:47:51.667 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/swagger/favicon-32x32.png - null null
+2026-09-09 15:47:51.670 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/favicon-32x32.png - 304 null null 3.5323ms
+2026-09-09 15:47:51.759 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/swagger/v1/swagger.json - 200 null application/json;charset=utf-8 93.1507ms
+2026-09-09 15:47:58.860 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/api/Departments - null null
+2026-09-09 15:47:58.866 +05:30 [WRN] Failed to determine the https port for redirect.
+2026-09-09 15:47:58.889 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-09 15:47:58.893 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-09 15:47:58.894 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/api/Departments - 401 0 null 34.1578ms
+2026-09-09 15:48:31.999 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5202/api/Auth/login - application/json 69
+2026-09-09 15:48:32.007 +05:30 [INF] Executing endpoint 'EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal)'
+2026-09-09 15:48:32.052 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(EmployeeAdminPortal.Models.LoginDto) on controller EmployeeAdminPortal.Controllers.AuthController (EmployeeAdminPortal).
+2026-09-09 15:48:32.178 +05:30 [INF] Executed DbCommand (12ms) [Parameters=[@request_Email='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [e].[Id], [e].[DepartmentId], [e].[Email], [e].[Name], [e].[PasswordHash], [e].[Phone], [e].[ProjectId], [e].[Role], [e].[Salary]
+FROM [Employees] AS [e]
+WHERE [e].[Email] = @request_Email
+2026-09-09 15:48:32.312 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.String'.
+2026-09-09 15:48:32.316 +05:30 [INF] Executed action EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal) in 259.4723ms
+2026-09-09 15:48:32.317 +05:30 [INF] Executed endpoint 'EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal)'
+2026-09-09 15:48:32.324 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5202/api/Auth/login - 200 null text/plain; charset=utf-8 324.0945ms
+2026-09-09 15:48:56.895 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/api/Employees - null null
+2026-09-09 15:48:56.933 +05:30 [INF] Executing endpoint 'EmployeeAdminPortal.Controllers.EmployeesController.GetAllEmployees (EmployeeAdminPortal)'
+2026-09-09 15:48:56.940 +05:30 [INF] Route matched with {action = "GetAllEmployees", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllEmployees() on controller EmployeeAdminPortal.Controllers.EmployeesController (EmployeeAdminPortal).
+2026-09-09 15:48:56.947 +05:30 [INF] GetAllEmployees endpoint called
+2026-09-09 15:48:57.064 +05:30 [INF] Executed DbCommand (5ms) [Parameters=[], CommandType='"Text"', CommandTimeout='30']
+SELECT [e].[Id], [e].[DepartmentId], [e].[Email], [e].[Name], [e].[PasswordHash], [e].[Phone], [e].[ProjectId], [e].[Role], [e].[Salary], [d].[Id], [d].[DepartmentName], [p].[Id], [p].[ProjectMembersCount], [p].[ProjectName]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[Id]
+LEFT JOIN [Projects] AS [p] ON [e].[ProjectId] = [p].[Id]
+2026-09-09 15:48:57.094 +05:30 [INF] Retrieved 5 employees
+2026-09-09 15:48:57.095 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.Collections.Generic.List`1[[EmployeeAdminPortal.Models.Entities.Employee, EmployeeAdminPortal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]'.
+2026-09-09 15:48:57.116 +05:30 [INF] Executed action EmployeeAdminPortal.Controllers.EmployeesController.GetAllEmployees (EmployeeAdminPortal) in 172.8732ms
+2026-09-09 15:48:57.117 +05:30 [INF] Executed endpoint 'EmployeeAdminPortal.Controllers.EmployeesController.GetAllEmployees (EmployeeAdminPortal)'
+2026-09-09 15:48:57.118 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/api/Employees - 200 null application/json; charset=utf-8 222.7875ms
+2026-09-09 15:49:25.107 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5202/api/Employees - application/json 178
+2026-09-09 15:49:25.114 +05:30 [INF] Authorization failed. These requirements were not met:
+RolesAuthorizationRequirement:User.IsInRole must be true for one of the following roles: (Admin)
+2026-09-09 15:49:25.117 +05:30 [INF] AuthenticationScheme: Bearer was forbidden.
+2026-09-09 15:49:25.118 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5202/api/Employees - 403 0 null 11.3639ms
+2026-09-09 15:49:51.718 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5202/api/Auth/login - application/json 61
+2026-09-09 15:49:51.721 +05:30 [INF] Executing endpoint 'EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal)'
+2026-09-09 15:49:51.722 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(EmployeeAdminPortal.Models.LoginDto) on controller EmployeeAdminPortal.Controllers.AuthController (EmployeeAdminPortal).
+2026-09-09 15:49:51.731 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@request_Email='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [e].[Id], [e].[DepartmentId], [e].[Email], [e].[Name], [e].[PasswordHash], [e].[Phone], [e].[ProjectId], [e].[Role], [e].[Salary]
+FROM [Employees] AS [e]
+WHERE [e].[Email] = @request_Email
+2026-09-09 15:49:51.787 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.String'.
+2026-09-09 15:49:51.789 +05:30 [INF] Executed action EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal) in 65.4728ms
+2026-09-09 15:49:51.790 +05:30 [INF] Executed endpoint 'EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal)'
+2026-09-09 15:49:51.791 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5202/api/Auth/login - 200 null text/plain; charset=utf-8 72.8932ms
+2026-09-09 15:50:02.226 +05:30 [INF] Request starting HTTP/1.1 POST http://localhost:5202/api/Auth/login - application/json 61
+2026-09-09 15:50:02.229 +05:30 [INF] Executing endpoint 'EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal)'
+2026-09-09 15:50:02.230 +05:30 [INF] Route matched with {action = "Login", controller = "Auth"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] Login(EmployeeAdminPortal.Models.LoginDto) on controller EmployeeAdminPortal.Controllers.AuthController (EmployeeAdminPortal).
+2026-09-09 15:50:02.234 +05:30 [INF] Executed DbCommand (1ms) [Parameters=[@request_Email='?' (Size = 4000)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [e].[Id], [e].[DepartmentId], [e].[Email], [e].[Name], [e].[PasswordHash], [e].[Phone], [e].[ProjectId], [e].[Role], [e].[Salary]
+FROM [Employees] AS [e]
+WHERE [e].[Email] = @request_Email
+2026-09-09 15:50:02.300 +05:30 [INF] Executing OkObjectResult, writing value of type 'System.String'.
+2026-09-09 15:50:02.301 +05:30 [INF] Executed action EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal) in 69.3356ms
+2026-09-09 15:50:02.302 +05:30 [INF] Executed endpoint 'EmployeeAdminPortal.Controllers.AuthController.Login (EmployeeAdminPortal)'
+2026-09-09 15:50:02.303 +05:30 [INF] Request finished HTTP/1.1 POST http://localhost:5202/api/Auth/login - 200 null text/plain; charset=utf-8 76.5893ms
+2026-09-09 15:51:33.493 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/api/Employees/0A993CD3-D739-478C-9B5A-1D02CCF346E0 - null null
+2026-09-09 15:51:33.495 +05:30 [INF] Authorization failed. These requirements were not met:
+DenyAnonymousAuthorizationRequirement: Requires an authenticated user.
+2026-09-09 15:51:33.496 +05:30 [INF] AuthenticationScheme: Bearer was challenged.
+2026-09-09 15:51:33.497 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/api/Employees/0A993CD3-D739-478C-9B5A-1D02CCF346E0 - 401 0 null 4.574ms
+2026-09-09 15:51:58.822 +05:30 [INF] Request starting HTTP/1.1 GET http://localhost:5202/api/Employees/0A993CD3-D739-478C-9B5A-1D02CCF346E0 - null null
+2026-09-09 15:51:58.825 +05:30 [INF] Executing endpoint 'EmployeeAdminPortal.Controllers.EmployeesController.GetAllEmployeesById (EmployeeAdminPortal)'
+2026-09-09 15:51:58.834 +05:30 [INF] Route matched with {action = "GetAllEmployeesById", controller = "Employees"}. Executing controller action with signature System.Threading.Tasks.Task`1[Microsoft.AspNetCore.Mvc.IActionResult] GetAllEmployeesById(System.Guid) on controller EmployeeAdminPortal.Controllers.EmployeesController (EmployeeAdminPortal).
+2026-09-09 15:51:58.837 +05:30 [INF] GetAllEmployeesById endpoint called with Id: "0a993cd3-d739-478c-9b5a-1d02ccf346e0"
+2026-09-09 15:51:58.852 +05:30 [INF] Executed DbCommand (4ms) [Parameters=[@id='?' (DbType = Guid)], CommandType='"Text"', CommandTimeout='30']
+SELECT TOP(1) [e].[Id], [e].[DepartmentId], [e].[Email], [e].[Name], [e].[PasswordHash], [e].[Phone], [e].[ProjectId], [e].[Role], [e].[Salary], [d].[Id], [d].[DepartmentName], [p].[Id], [p].[ProjectMembersCount], [p].[ProjectName]
+FROM [Employees] AS [e]
+INNER JOIN [Departments] AS [d] ON [e].[DepartmentId] = [d].[Id]
+LEFT JOIN [Projects] AS [p] ON [e].[ProjectId] = [p].[Id]
+WHERE [e].[Id] = @id
+2026-09-09 15:51:58.854 +05:30 [INF] Employee with Id: "0a993cd3-d739-478c-9b5a-1d02ccf346e0" retrieved successfully
+2026-09-09 15:51:58.855 +05:30 [INF] Executing OkObjectResult, writing value of type 'EmployeeAdminPortal.Models.Entities.Employee'.
+2026-09-09 15:51:58.856 +05:30 [INF] Executed action EmployeeAdminPortal.Controllers.EmployeesController.GetAllEmployeesById (EmployeeAdminPortal) in 21.1536ms
+2026-09-09 15:51:58.857 +05:30 [INF] Executed endpoint 'EmployeeAdminPortal.Controllers.EmployeesController.GetAllEmployeesById (EmployeeAdminPortal)'
+2026-09-09 15:51:58.858 +05:30 [INF] Request finished HTTP/1.1 GET http://localhost:5202/api/Employees/0A993CD3-D739-478C-9B5A-1D02CCF346E0 - 200 null application/json; charset=utf-8 36.4932ms
+2026-09-09 16:06:10.863 +05:30 [INF] Application is shutting down...
