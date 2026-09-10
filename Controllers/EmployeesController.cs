@@ -24,12 +24,28 @@ namespace EmployeeAdminPortal.Controllers
             this.logger = logger;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllEmployees()
+        public async Task<IActionResult> GetAllEmployees([FromQuery] EmployeeSearchDto searchDto)
         {
-            logger.LogInformation("GetAllEmployees endpoint called");
+            logger.LogInformation("GetAllEmployees called with Search={Search}, DepartmentId={DepartmentId}",searchDto.Search,searchDto.DepartmentId);
 
-            var employees = await dBcontext.Employees.Include(e => e.Department).Include(e=>e.Project).ToListAsync();
-            logger.LogInformation("Retrieved {Count} employees",employees.Count);
+            IQueryable<Employee> query = dBcontext.Employees.Include(e => e.Department).Include(e => e.Project);
+
+            if (!string.IsNullOrWhiteSpace(searchDto.Search))
+            {
+                logger.LogInformation("Applying search filter: {Search}", searchDto.Search);
+                query = query.Where(e => e.Name.Contains(searchDto.Search) || e.Email.Contains(searchDto.Search));
+            }
+
+            if (searchDto.DepartmentId.HasValue)
+            {
+                logger.LogInformation("Applying department filter: {DepartmentId}", searchDto.DepartmentId.Value);
+                query = query.Where(e => e.DepartmentId == searchDto.DepartmentId.Value);
+            }
+
+            var employees = await query.ToListAsync();
+
+            logger.LogInformation("Retrieved {Count} employees", employees.Count);
+
             return Ok(employees);
         }
         [Authorize(Roles = "Admin")]

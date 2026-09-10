@@ -520,3 +520,4 @@ C:\dev\Training-Journal\Week-4\EmployeeAdminPortal\EmployeeAdminPortal\bin\Debug
 C:\dev\Training-Journal\Week-4\EmployeeAdminPortal\EmployeeAdminPortal\bin\Debug\net10.0\Serilog.Sinks.Console.dll
 C:\dev\Training-Journal\Week-4\EmployeeAdminPortal\EmployeeAdminPortal\bin\Debug\net10.0\Serilog.Sinks.Debug.dll
 C:\dev\Training-Journal\Week-4\EmployeeAdminPortal\EmployeeAdminPortal\bin\Debug\net10.0\Serilog.Sinks.File.dll
+C:\dev\Training-Journal\Week-4\EmployeeAdminPortal\EmployeeAdminPortal\obj\Debug\net10.0\EmployeeAdminPortal.sourcelink.json
