@@ -29,20 +29,14 @@ builder.Services.AddSwaggerGen(options =>
         Description = "Enter only your JWT token."
     });
 
-    options.AddSecurityRequirement(document =>
-        new Microsoft.OpenApi.OpenApiSecurityRequirement
+    options.AddSecurityRequirement(document =>new Microsoft.OpenApi.OpenApiSecurityRequirement
         {
-            [
-                new Microsoft.OpenApi.OpenApiSecuritySchemeReference(
-                    "Bearer",
-                    document)
-            ] = new List<string>()
+            [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer",document)] = new List<string>()
         });
 });
 
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlServer(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     options =>
@@ -82,8 +76,7 @@ app.MapControllers();
 
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider
-        .GetRequiredService<ApplicationDbContext>();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
     await DbSeeder.SeedAdminAsync(dbContext);
 }

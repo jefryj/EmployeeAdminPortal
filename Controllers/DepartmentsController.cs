@@ -21,9 +21,21 @@ namespace EmployeeAdminPortal.Controllers
             this.dBcontext = dBcontext;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllDepartments()
+        public async Task<IActionResult> GetAllDepartments([FromQuery] DepartmentSearchDto searchDto)
         {
-            var departments = await dBcontext.Departments.ToListAsync();
+            IQueryable<Department> query = dBcontext.Departments;
+
+            if (!string.IsNullOrWhiteSpace(searchDto.Search))
+            {
+                query = query.Where(d => d.DepartmentName.Contains(searchDto.Search));
+            }
+
+            var departments = await query
+                .OrderBy(d => d.Id)
+                .Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
+                .Take(searchDto.PageSize)
+                .ToListAsync();
+
             return Ok(departments);
         }
 

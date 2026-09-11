@@ -42,7 +42,8 @@ namespace EmployeeAdminPortal.Controllers
                 query = query.Where(e => e.DepartmentId == searchDto.DepartmentId.Value);
             }
 
-            var employees = await query.ToListAsync();
+            var employees = await query.OrderBy(e=>e.Id).Skip((searchDto.PageNumber - 1) * searchDto.PageSize).Take(searchDto.PageSize).ToListAsync();
+            
 
             logger.LogInformation("Retrieved {Count} employees", employees.Count);
 

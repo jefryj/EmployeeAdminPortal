@@ -22,9 +22,22 @@ namespace EmployeeAdminPortal.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllProjects()
+        public async Task<IActionResult> GetAllProjects([FromQuery] ProjectSearchDto searchDto)
         {
-            return Ok(await dBcontext.Projects.ToListAsync());
+            IQueryable<Project> query = dBcontext.Projects;
+
+            if (!string.IsNullOrWhiteSpace(searchDto.Search))
+            {
+                query = query.Where(p => p.ProjectName.Contains(searchDto.Search));
+            }
+
+            var projects = await query
+                .OrderBy(p => p.Id)
+                .Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
+                .Take(searchDto.PageSize)
+                .ToListAsync();
+
+            return Ok(projects);
         }
 
         [HttpGet("{id}")]
