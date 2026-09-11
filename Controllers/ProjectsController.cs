@@ -47,7 +47,7 @@ namespace EmployeeAdminPortal.Controllers
 
             if (project == null)
             {
-                return NotFound();
+                throw new KeyNotFoundException("Project not found");
             }
 
             return Ok(project);
@@ -59,13 +59,13 @@ namespace EmployeeAdminPortal.Controllers
         {   
             if(dto == null)
             {
-                return BadRequest("Project data is required.");
+                throw new ArgumentException("Project data is required.");
             }
             bool projectExists = await dBcontext.Projects.AnyAsync(p => p.ProjectName == dto.ProjectName);
 
             if (projectExists)
             {
-                return BadRequest("Project already exists.");
+                throw new ArgumentException("Project already exists.");
             }
             var project = new Project
             {
@@ -87,19 +87,19 @@ namespace EmployeeAdminPortal.Controllers
         {   
             if(dto == null)
             {
-                return BadRequest("Project data is required.");
+                throw new ArgumentException("Project data is required.");
             }
             var project = await dBcontext.Projects.FindAsync(id);
 
             if (project == null)
             {
-                return NotFound();
+                throw new KeyNotFoundException("Project not found");
             }
             bool projectExists = await dBcontext.Projects.AnyAsync(p => p.Id != id && p.ProjectName == dto.ProjectName);
 
             if (projectExists)
             {
-                return BadRequest("Project already exists.");
+                throw new ArgumentException("Project already exists.");
             }
 
             project.ProjectName = dto.ProjectName;
@@ -116,7 +116,7 @@ namespace EmployeeAdminPortal.Controllers
 
             if (project == null)
             {
-                return NotFound();
+                throw new KeyNotFoundException("Project not found");
             }
 
             dBcontext.Projects.Remove(project);

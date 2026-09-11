@@ -7,9 +7,7 @@ namespace EmployeeAdminPortal.Middleware
         private readonly RequestDelegate next;
         private readonly ILogger<GlobalExceptionHandlingMiddleware> logger;
 
-        public GlobalExceptionHandlingMiddleware(
-            RequestDelegate next,
-            ILogger<GlobalExceptionHandlingMiddleware> logger)
+        public GlobalExceptionHandlingMiddleware(RequestDelegate next,ILogger<GlobalExceptionHandlingMiddleware> logger)
         {
             this.next = next;
             this.logger = logger;
@@ -29,15 +27,35 @@ namespace EmployeeAdminPortal.Middleware
                 {
                     throw;
                 }
-
+                int statusCode;
+                    string title;
+                    switch (ex)
+                    {
+                    case KeyNotFoundException:
+                        statusCode = StatusCodes.Status404NotFound;
+                        title = ex.Message;
+                        break;
+                    case ArgumentException:
+                        statusCode = StatusCodes.Status400BadRequest;
+                        title = ex.Message;
+                        break;
+                    case UnauthorizedAccessException:
+                        statusCode = StatusCodes.Status401Unauthorized;
+                        title = ex.Message;
+                        break;
+                    default:
+                        statusCode = StatusCodes.Status500InternalServerError;
+                        title = "An unexpected error occurred.";
+                        break;
+                    }
                 context.Response.Clear();
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                context.Response.StatusCode = statusCode;
                 context.Response.ContentType = "application/json";
 
                 var problemDetails = new ProblemDetails
                 {
-                    Status = StatusCodes.Status500InternalServerError,
-                    Title = "An unexpected error occurred.",
+                    Status = statusCode,
+                    Title = title,
                     Instance = context.Request.Path
                 };
 

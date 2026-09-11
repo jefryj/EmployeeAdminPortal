@@ -45,7 +45,7 @@ namespace EmployeeAdminPortal.Controllers
             var department = await dBcontext.Departments.FindAsync(id);
             if(department == null)
             {
-                return NotFound();
+                throw new KeyNotFoundException("Department not found");
             }
             return Ok(department);
         }
@@ -57,13 +57,13 @@ namespace EmployeeAdminPortal.Controllers
         {
             if(dto == null)
             {
-                return BadRequest("Department data is required.");
+                throw new ArgumentException("Department data is required.");
             }
             bool departmentExists = await dBcontext.Departments.AnyAsync(d => d.DepartmentName == dto.DepartmentName);
 
             if (departmentExists)
             {
-                return BadRequest("Department already exists.");
+                throw new ArgumentException("Department already exists.");
             }
             var department = new Department
             {
@@ -81,18 +81,18 @@ namespace EmployeeAdminPortal.Controllers
         {   
             if(dto == null)
             {
-                return BadRequest("Department data is required.");
+                throw new ArgumentException("Department data is required.");
             }
             var department = await dBcontext.Departments.FindAsync(id);
             if (department == null)
             {
-                return NotFound();
+                throw new KeyNotFoundException("Department not found");
             }
             bool departmentExists = await dBcontext.Departments.AnyAsync(d =>d.Id != id && d.DepartmentName == dto.DepartmentName);
 
             if (departmentExists)
             {
-                return BadRequest("Department already exists.");
+                throw new ArgumentException("Department already exists.");
             }
             department.DepartmentName = dto.DepartmentName;
             await dBcontext.SaveChangesAsync();
@@ -105,7 +105,7 @@ namespace EmployeeAdminPortal.Controllers
             var department = await dBcontext.Departments.FindAsync(id);
             if (department == null)
             {
-                return NotFound();
+                throw new KeyNotFoundException("Department not found");
             }
             dBcontext.Departments.Remove(department);
             await dBcontext.SaveChangesAsync();

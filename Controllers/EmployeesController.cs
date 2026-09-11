@@ -42,8 +42,33 @@ namespace EmployeeAdminPortal.Controllers
                 query = query.Where(e => e.DepartmentId == searchDto.DepartmentId.Value);
             }
 
-            var employees = await query.OrderBy(e=>e.Id).Skip((searchDto.PageNumber - 1) * searchDto.PageSize).Take(searchDto.PageSize).ToListAsync();
-            
+            logger.LogInformation("Applying sorting. SortBy={SortBy}, Descending={Descending}",searchDto.SortBy,searchDto.Descending);
+
+            if (!string.IsNullOrWhiteSpace(searchDto.SortBy))
+            {
+                switch (searchDto.SortBy.ToLower())
+                {
+                    case "name":
+                        query = searchDto.Descending ? query.OrderByDescending(e => e.Name) : query.OrderBy(e => e.Name);
+                        break;
+
+                    case "email":
+                        query = searchDto.Descending ? query.OrderByDescending(e => e.Email) : query.OrderBy(e => e.Email);
+                        break;
+
+                    case "salary":
+                        query = searchDto.Descending ? query.OrderByDescending(e => e.Salary) : query.OrderBy(e => e.Salary);
+                        break;
+                    case "department":
+                        query = query.OrderBy(e => e.Department.DepartmentName);
+                        break;
+
+                    default:
+                        query = searchDto.Descending ? query.OrderByDescending(e => e.Id) : query.OrderBy(e => e.Id);
+                        break;
+                }
+            }
+            var employees = await query.Skip((searchDto.PageNumber - 1) * searchDto.PageSize).Take(searchDto.PageSize).ToListAsync();
 
             logger.LogInformation("Retrieved {Count} employees", employees.Count);
 
@@ -109,7 +134,7 @@ namespace EmployeeAdminPortal.Controllers
             if (employee == null)
             {
                 logger.LogWarning("Employee with Id: {Id} not found", id);
-                return NotFound();
+                throw new KeyNotFoundException("Employee not found");
                 
             }
             logger.LogInformation("Employee with Id: {Id} retrieved successfully", id);
@@ -151,7 +176,7 @@ namespace EmployeeAdminPortal.Controllers
             if (employee == null)
             {
                 logger.LogWarning("Employee with Id: {Id} not found", id);
-                return NotFound();
+                throw new KeyNotFoundException("Employee not found");
             }
             var oldProjectId = employee.ProjectId;
 
@@ -201,7 +226,7 @@ namespace EmployeeAdminPortal.Controllers
             if (employee == null)
             {
                 logger.LogWarning("Employee with Id: {Id} not found", id);
-                return NotFound();
+                throw new KeyNotFoundException("Employee not found");
             }
             if (employee.ProjectId != null)
             {
