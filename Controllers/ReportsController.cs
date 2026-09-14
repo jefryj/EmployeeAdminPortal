@@ -2,6 +2,7 @@ using EmployeeAdminPortal.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeAdminPortal.Controllers
 {
@@ -12,11 +13,13 @@ namespace EmployeeAdminPortal.Controllers
     {
         private readonly ApplicationDbContext dBcontext;
         private readonly ILogger<ReportsController> logger;
+        private readonly IMemoryCache cache;
 
-        public ReportsController(ApplicationDbContext dBcontext, ILogger<ReportsController> logger)
+        public ReportsController(ApplicationDbContext dBcontext, ILogger<ReportsController> logger, IMemoryCache cache)
         {
             this.dBcontext = dBcontext;
             this.logger = logger;
+            this.cache = cache;
         }
 
         [HttpGet("department-summary")]
@@ -24,7 +27,13 @@ namespace EmployeeAdminPortal.Controllers
         {
             logger.LogInformation("GetDepartmentSummary endpoint called");
 
-            var report = await dBcontext.Departments
+            const string cacheKey = "department-summary";
+
+        if (!cache.TryGetValue(cacheKey, out object? report))
+        {
+            logger.LogInformation("Department Summary CACHE MISS");
+
+            report = await dBcontext.Departments
                 .Select(d => new
                 {
                     d.DepartmentName,
@@ -32,9 +41,14 @@ namespace EmployeeAdminPortal.Controllers
                     AverageSalary = dBcontext.Employees.Where(e => e.DepartmentId == d.Id).Average(e => (decimal?)e.Salary) ?? 0
                 }).ToListAsync();
 
-            logger.LogInformation("Retrieved {Count} department summaries", report.Count);
+            cache.Set(cacheKey, report, TimeSpan.FromMinutes(5));
+        }
+        else
+        {
+            logger.LogInformation("Department Summary CACHE HIT");
+        }
 
-            return Ok(report);
+        return Ok(report);
         }
 
         [HttpGet("project-summary")]
@@ -42,7 +56,13 @@ namespace EmployeeAdminPortal.Controllers
         {
             logger.LogInformation("GetProjectSummary endpoint called");
 
-            var report = await dBcontext.Projects
+            const string cacheKey = "project-summary";
+
+        if (!cache.TryGetValue(cacheKey, out object? report))
+        {
+            logger.LogInformation("Project Summary CACHE MISS");
+
+            report = await dBcontext.Projects
                 .Select(p => new
                 {
                     p.ProjectName,
@@ -50,9 +70,15 @@ namespace EmployeeAdminPortal.Controllers
                     AverageSalary = dBcontext.Employees.Where(e => e.ProjectId == p.Id).Average(e => (decimal?)e.Salary) ?? 0
                 }).ToListAsync();
 
-            logger.LogInformation("Retrieved {Count} project summaries", report.Count);
+            cache.Set(cacheKey, report, TimeSpan.FromMinutes(5));
+        }
+        else
+        {
+            logger.LogInformation("Project Summary CACHE HIT");
+        }
 
-            return Ok(report);
+        return Ok(report);
+
         }
     }
     

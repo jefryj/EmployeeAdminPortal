@@ -55,6 +55,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Token"]!))
             };
     });
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

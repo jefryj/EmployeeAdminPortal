@@ -5,6 +5,8 @@ using EmployeeAdminPortal.Models;
 using EmployeeAdminPortal.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 
 
 namespace EmployeeAdminPortal.Controllers
@@ -13,13 +15,26 @@ namespace EmployeeAdminPortal.Controllers
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentsController : ControllerBase
-    {
+    {   
+        private static readonly List<string> cacheKeys = new();
+        private readonly IMemoryCache cache;
         private readonly ApplicationDbContext dBcontext;
 
-        public DepartmentsController(ApplicationDbContext dBcontext)
+        public DepartmentsController(ApplicationDbContext dBcontext, IMemoryCache cache)
         {
             this.dBcontext = dBcontext;
+            this.cache = cache;
         }
+
+        private void ClearDepartmentCache()
+            {
+                foreach (var key in cacheKeys)
+                {
+                    cache.Remove(key);
+                }
+
+                cacheKeys.Clear();
+            }
         [HttpGet]
         public async Task<IActionResult> GetAllDepartments([FromQuery] DepartmentSearchDto searchDto)
         {
@@ -30,11 +45,24 @@ namespace EmployeeAdminPortal.Controllers
                 query = query.Where(d => d.DepartmentName.Contains(searchDto.Search));
             }
 
-            var departments = await query
-                .OrderBy(d => d.Id)
-                .Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
-                .Take(searchDto.PageSize)
-                .ToListAsync();
+            string cacheKey = $"departments-{searchDto.Search}-{searchDto.PageNumber}-{searchDto.PageSize}";
+
+            List<Department>? departments;
+
+            bool foundInCache = cache.TryGetValue(cacheKey, out departments);
+
+            if (foundInCache == false)
+            {
+                departments = await query.OrderBy(d => d.Id).Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
+                .Take(searchDto.PageSize).ToListAsync();
+
+                cache.Set(cacheKey, departments, TimeSpan.FromMinutes(5));
+
+                if (!cacheKeys.Contains(cacheKey))
+                {
+                    cacheKeys.Add(cacheKey);
+                }
+            }
 
             return Ok(departments);
         }
@@ -72,6 +100,18 @@ namespace EmployeeAdminPortal.Controllers
 
             await dBcontext.Departments.AddAsync(department);
             await dBcontext.SaveChangesAsync();
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "Create",
+                EntityName = "Department",
+                Details = $"Department {department.DepartmentName} was created",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
+            ClearDepartmentCache();
             return CreatedAtAction(nameof(GetDepartmentById), new { id = department.Id }, department);
         }
         [Authorize(Roles = "Admin")]
@@ -96,6 +136,17 @@ namespace EmployeeAdminPortal.Controllers
             }
             department.DepartmentName = dto.DepartmentName;
             await dBcontext.SaveChangesAsync();
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "Update",
+                EntityName = "Department",
+                Details = $"Department {department.DepartmentName} was updated",
+                CreatedAt = DateTime.UtcNow
+            };
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
+            ClearDepartmentCache();
             return Ok(department);
         }
         [Authorize(Roles = "Admin")]
@@ -109,6 +160,17 @@ namespace EmployeeAdminPortal.Controllers
             }
             dBcontext.Departments.Remove(department);
             await dBcontext.SaveChangesAsync();
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "Delete",
+                EntityName = "Department",
+                Details = $"Department {department.DepartmentName} was deleted",
+                CreatedAt = DateTime.UtcNow
+            };
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
+            ClearDepartmentCache();
             return NoContent();
         }
     }

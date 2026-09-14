@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace EmployeeAdminPortal.Controllers
 {
@@ -13,14 +15,24 @@ namespace EmployeeAdminPortal.Controllers
     [ApiController]
     public class ProjectsController : ControllerBase
     {
+        private static readonly List<string> cacheKeys = new();
 
+        private readonly IMemoryCache cache;
         private readonly ApplicationDbContext dBcontext;
 
-        public ProjectsController(ApplicationDbContext dBcontext)
+        public ProjectsController(ApplicationDbContext dBcontext, IMemoryCache cache)
         {
             this.dBcontext = dBcontext;
+            this.cache = cache;
         }
-
+        private void ClearProjectCache()
+        {
+            foreach (var key in cacheKeys)
+            {
+                cache.Remove(key);
+            }
+            cacheKeys.Clear();
+        }
         [HttpGet]
         public async Task<IActionResult> GetAllProjects([FromQuery] ProjectSearchDto searchDto)
         {
@@ -31,11 +43,24 @@ namespace EmployeeAdminPortal.Controllers
                 query = query.Where(p => p.ProjectName.Contains(searchDto.Search));
             }
 
-            var projects = await query
-                .OrderBy(p => p.Id)
-                .Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
-                .Take(searchDto.PageSize)
-                .ToListAsync();
+            string cacheKey = $"projects-{searchDto.Search}-{searchDto.PageNumber}-{searchDto.PageSize}";
+
+            List<Project>? projects;
+
+            bool foundInCache = cache.TryGetValue(cacheKey, out projects);
+
+            if (!foundInCache)
+            {
+                projects = await query.OrderBy(p => p.Id).Skip((searchDto.PageNumber - 1) * searchDto.PageSize)
+                    .Take(searchDto.PageSize).ToListAsync();
+
+                cache.Set(cacheKey, projects, TimeSpan.FromMinutes(5));
+
+                if (!cacheKeys.Contains(cacheKey))
+                {
+                    cacheKeys.Add(cacheKey);
+                }
+            }
 
             return Ok(projects);
         }
@@ -78,6 +103,19 @@ namespace EmployeeAdminPortal.Controllers
 
             await dBcontext.SaveChangesAsync();
 
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "Create",
+                EntityName = "Project",
+                Details = $"Project {project.ProjectName} was created",
+                CreatedAt = DateTime.UtcNow
+            };
+
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
+            ClearProjectCache();
+
             return CreatedAtAction(nameof(GetProjectById), new { id = project.Id }, project);
         }
 
@@ -105,6 +143,17 @@ namespace EmployeeAdminPortal.Controllers
             project.ProjectName = dto.ProjectName;
 
             await dBcontext.SaveChangesAsync();
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "Update",
+                EntityName = "Project",
+                Details = $"Project {project.ProjectName} was updated",
+                CreatedAt = DateTime.UtcNow
+            };
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
+            ClearProjectCache();
 
             return Ok(project);
         }
@@ -122,7 +171,18 @@ namespace EmployeeAdminPortal.Controllers
             dBcontext.Projects.Remove(project);
 
             await dBcontext.SaveChangesAsync();
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "Delete",
+                EntityName = "Project",
+                Details = $"Project {project.ProjectName} was deleted",
+                CreatedAt = DateTime.UtcNow
+            };
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
 
+            ClearProjectCache();
             return NoContent();
         }
     }

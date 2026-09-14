@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace EmployeeAdminPortal.Controllers
 {
@@ -120,6 +121,17 @@ namespace EmployeeAdminPortal.Controllers
             emp.PasswordHash = hasher.HashPassword(emp, addemp.Password);
             await dBcontext.Employees.AddAsync(emp);
             await dBcontext.SaveChangesAsync();
+
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "AddEmployee",
+                EntityName = "Employee",
+                Details = $"Added employee with Id: {emp.Id}, Name: {emp.Name}",
+                CreatedAt = DateTime.UtcNow
+            };
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
             logger.LogInformation("Employee added successfully with Id: {Id}", emp.Id);
 
             return CreatedAtAction(nameof(GetAllEmployeesById), new { id = emp.Id }, emp);
@@ -214,6 +226,16 @@ namespace EmployeeAdminPortal.Controllers
             }
 
             await dBcontext.SaveChangesAsync();
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "UpdateEmployee",
+                EntityName = "Employee",
+                Details = $"Updated employee with Id: {employee.Id}, Name: {employee.Name}",
+                CreatedAt = DateTime.UtcNow
+            };
+            await dBcontext.AuditLogs.AddAsync(auditLog);
+            await dBcontext.SaveChangesAsync();
             logger.LogInformation("Employee with Id: {Id} updated successfully", id);
             return Ok(employee);
         }
@@ -239,6 +261,16 @@ namespace EmployeeAdminPortal.Controllers
                 }
             }
             dBcontext.Employees.Remove(employee);
+            await dBcontext.SaveChangesAsync();
+            var auditLog = new AuditLog
+            {
+                UserName = User.FindFirst(ClaimTypes.Email)?.Value ?? "Unknown",
+                Action = "DeleteEmployee",
+                EntityName = "Employee",
+                Details = $"Deleted employee with Id: {employee.Id}, Name: {employee.Name}",
+                CreatedAt = DateTime.UtcNow
+            };
+            await dBcontext.AuditLogs.AddAsync(auditLog);
             await dBcontext.SaveChangesAsync();
             logger.LogInformation("Employee with Id: {Id} deleted successfully", id);
             return NoContent();
